@@ -4,11 +4,13 @@ pipeline {
     stages {
 
         stage('Git Clone') {
-            steps {
-                echo "Cloning repository..."
-                git branch: 'main', url: 'https://github.com/USERNAME/simple-app.git'
-            }
-        }
+    steps {
+        git branch: 'main',
+            credentialsId: 'github-creds',
+            url: 'https://github.com/suhas19-Git/simple-app.git'
+    }
+}
+
 
         stage('Docker Build') {
             steps {
