@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Git Clone') {
+            steps {
+                echo "Cloning repository..."
+                git branch: 'main', url: 'https://github.com/USERNAME/simple-app.git'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo "Building Docker image..."
+                sh 'docker build -t simple-nginx-app .'
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                echo "Running Docker container..."
+                sh '''
+                docker rm -f simple-app || true
+                docker run -d -p 8080:80 --name simple-app simple-nginx-app
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline SUCCESS 🎉"
+        }
+        failure {
+            echo "Pipeline FAILED ❌"
+        }
+    }
+}
